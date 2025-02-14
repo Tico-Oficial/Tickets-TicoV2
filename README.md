@@ -101,3 +101,7 @@ Este sistema cuenta con 3 Palabras claves, las cual son: **{tagg-user}, {tagg-ro
 > De igual manera podrás configurar un canal de transcripciones, el cuál será el canal donde se enviarán los tickets cuando Sean eliminados junto con la transcripción del mismo.
 
 > También se enviará un MD al dueño del ticket cuando su ticket fué cerrado (solo sí tiene los MD habilitados)
+
+
+**IMPORTANTE:** 
+> Recuerda que por cualquier modificación pierdes el derecho de recibir soporte
