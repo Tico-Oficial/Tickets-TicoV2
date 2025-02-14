@@ -1,0 +1,1000 @@
+PREFIJO: $onInteraction
+
+$nomention
+$suppressErrors[Hay un error :(]
+$onlyIf[$or[$customID==1;$customID==2;$customID==3;$customID==4;$customID==5;$customID==tickets;$customID==recl;$customID==cerr;$customID==eliminar;$customID==val;$customID==rea;$customID==config-panel;$customID==panel-ticket;$customID==cf-pan;$customID==cf-paneles]==true;]
+$removeAllComponents
+$ephemeral
+$if[$or[$message==rr-1;$message==rr-2;$message==rr-3;$message==rr-4;$message==rr-5;$message==ca-1;$message==ca-2;$message==ca-3;$message==ca-4;$message==ca-5;$message==ms-1;$message==ms-2;$message==ms-3;$message==ms-4;$message==ms-5;$message==name-1;$message==name-2;$message==name-3;$message==name-4;$message==name-5]==true]
+$onlyAdmin[]
+$newModal[cf-pan;Configura el panel]
+$var[tico-ms;1]
+$var[tico-name;1]
+$var[tico-ca;1]
+$var[tico-rr;1]
+$eval[$repeatMessage[5;
+%{DOL}%jsonParse[%{DOL}%getUserVar[paneles-ticket\;%{DOL}%botID\;%{DOL}%guildID\]\]
+%{DOL}%if[%{DOL}%message==ms-%{DOL}%var[tico-ms\]\]
+
+%{DOL}%jsonSetString[id\;%{DOL}%var[tico-ms\]\]
+%{DOL}%addTextInput[t-%{DOL}%var[tico-ms\]\;short\;Titulo\;\;30\;no\;\;\]
+%{DOL}%addTextInput[d-%{DOL}%var[tico-ms\]\;paragraph\;Descripcion\;\;330\;no\;\;\]
+%{DOL}%addTextInput[i-%{DOL}%var[tico-ms\]\;short\;Imagen\;\;\;no\;\;\]
+%{DOL}%addTextInput[f-%{DOL}%var[tico-ms\]\;short\;Footer\;\;30\;no\;\;\]
+%{DOL}%addTextInput[c-%{DOL}%var[tico-ms\]\;short\;Color\;\;6\;no\;\;\]
+
+%{DOL}%elseif[%{DOL}%message==name-%{DOL}%var[tico-name\]\]
+
+%{DOL}%jsonSetString[id\;%{DOL}%var[tico-name\]\]
+%{DOL}%addTextInput[e-%{DOL}%var[tico-name\]\;short\;Emoji del panel\;\;30\;no\;\;\]
+%{DOL}%addTextInput[n-%{DOL}%var[tico-name\]\;short\;Nombre del panel\;\;30\;no\;\;\]
+
+%{DOL}%elseif[%{DOL}%message==ca-%{DOL}%var[tico-ca\]\]
+%{DOL}%jsonSetString[id\;%{DOL}%var[tico-ca\]\]
+%{DOL}%addTextInput[ca-%{DOL}%var[tico-ca\]\;short\;ID de la categoria\;\;30\;no\;\;Ejemplo: 18292939298290\]
+
+%{DOL}%elseif[%{DOL}%message==rr-%{DOL}%var[tico-rr\]\]
+%{DOL}%jsonSetString[id\;%{DOL}%var[tico-rr\]\]
+%{DOL}%addTextInput[rr-%{DOL}%var[tico-rr\]\;short\;ID del rol a agregar\;\;30\;no\;\;Ejemplo: 18292939298290\]
+%{DOL}%addTextInput[rr-q-%{DOL}%var[tico-rr\]\;short\;ID del rol a eliminar\;\;30\;no\;\;Ejemplo: 18292939298290\]
+
+%{DOL}%else
+%{DOL}%var[tico-ms\;%{DOL}%sum[%{DOL}%var[tico-ms\]\;1\]\]
+%{DOL}%var[tico-name\;%{DOL}%sum[%{DOL}%var[tico-name\]\;1\]\]
+%{DOL}%var[tico-ca\;%{DOL}%sum[%{DOL}%var[tico-ca\]\;1\]\]
+%{DOL}%var[tico-rr\;%{DOL}%sum[%{DOL}%var[tico-rr\]\;1\]\]
+%{DOL}%endif
+%{DOL}%setUserVar[paneles-ticket\;%{DOL}%jsonStringify\;%{DOL}%botID\;%{DOL}%guildID\]
+]]
+
+$elseif[$customID==cf-pan]
+$onlyAdmin[]
+$jsonParse[$getUserVar[paneles-ticket;$botID;$guildID]]
+$var[id;$json[id]]
+$if[$input[t-$json[id]]!=]
+$jsonSetString[titulo-$json[id];$input[t-$json[id]]]
+$endif
+$if[$input[d-$json[id]]!=]
+$jsonSetString[descripcion-$json[id];$input[d-$json[id]]]
+$endif
+$if[$input[i-$json[id]]!=]
+$jsonSetString[imagen-$json[id];$input[i-$json[id]]]
+$endif
+$if[$input[f-$json[id]]!=]
+$jsonSetString[footer-$json[id];$input[f-$json[id]]]
+$endif
+$if[$input[c-$json[id]]!=]
+$onlyIf[$isValidHex[$input[c-$json[id]]]==true;
+❌ | Color hexadecimal invalido.
+
+Ejemplo: #ff0000]
+$jsonSetString[color-$json[id];$input[c-$json[id]]]
+$endif
+
+$if[$input[e-$json[id]]!=]
+$try
+$addReactions[$input[e-$json[id]]]
+$catch
+Eso no es un emoji
+$stop
+$endtry
+$jsonSetString[emoji-$json[id];$input[e-$json[id]]]
+$endif
+$if[$input[n-$json[id]]!=]
+$jsonSetString[name-$json[id];$input[n-$json[id]]]
+$endif
+
+$if[$input[ca-$var[id]]!=]
+$if[$channelExists[$input[ca-$var[id]]]==true]
+$if[$checkContains[$channelType[$input[ca-$var[id]]];category]==true]
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$jsonSetString[c$var[id];$input[ca-$var[id]]]
+$setUserVar[ticket;$jsonStringify;$botID;$guildID]
+$addField[✅ | Configurado;
+La categoria **$channelName[$input[ca-$var[id]]]** fué configurada correctamente como la categoria donde se crearán los tickets de este panel]
+$color[00ff00]
+$stop
+$else
+$addField[❌ | Error;
+El ID no corresponde a una categoria]
+$color[ff0000]
+$stop
+$endif
+$else
+$addField[❌ | Error;
+La categoria no existe, por favor coloca el ID	 correctamente]
+$color[ff0000]
+$stop
+$endif
+$endif
+
+$if[$input[rr-$var[id]]!=]
+$if[$roleExists[$input[rr-$var[id]]]==true]
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$textSplit[$json[rr-$var[id]];|]
+$var[tsp;$getTextSplitLength]
+$var[tico;1]
+$eval[$repeatMessage[3;
+%{DOL}%if[%{DOL}%checkContains[%{DOL}%json[rr-%{DOL}%var[id\]\]\;%{DOL}%input[rr-%{DOL}%var[id\]\]\]==true\]
+%{DOL}%var[tico-god\;no\]
+%{DOL}%stop
+%{DOL}%elseif[%{DOL}%json[rr-%{DOL}%var[id\]\]==\]
+%{DOL}%jsonSetString[rr-%{DOL}%var[id\]\;%{DOL}%input[rr-%{DOL}%var[id\]\]\]
+%{DOL}%setUserVar[ticket\;%{DOL}%jsonStringify\;%{DOL}%botID\;%{DOL}%guildID\]
+%{DOL}%var[tico-god\;si\]
+%{DOL}%stop
+%{DOL}%elseif[%{DOL}%and[%{DOL}%getTextSplitLength<3\;%{DOL}%json[rr-%{DOL}%var[id\]\]!=\]==true\]
+%{DOL}%jsonSetString[rr-%{DOL}%var[id\]\;%{DOL}%json[rr-%{DOL}%var[id\]\]|%{DOL}%input[rr-%{DOL}%var[id\]\]\]
+%{DOL}%setUserVar[ticket\;%{DOL}%jsonStringify\;%{DOL}%botID\;%{DOL}%guildID\]
+%{DOL}%var[tico-god\;si\]
+%{DOL}%stop
+%{DOL}%elseif[%{DOL}%var[tico\]>=3\]
+%{DOL}%addField[⚙️ | Configuración\;Límite alcanzado **3/3**\]
+%{DOL}%color[ff0000\]
+%{DOL}%else
+%{DOL}%var[tico\;%{DOL}%sum[%{DOL}%var[tico\]\;1\]\]
+%{DOL}%endif
+]]
+$addField[⚙️ | Configuración;$replaceText[$replaceText[$checkCondition[$var[tico-god]==si];true;Rol agregado correctamente;1];false;Este rol ya está configurado en este panel;1]]
+$color[$replaceText[$replaceText[$checkCondition[$var[tico-god]==si];true;00ff00;1];false;ff0000;1]]
+$stop
+$else
+$addField[❌ | Error;
+El rol no existe, por favor coloca el ID	 correctamente]
+$color[ff0000]
+$stop
+$endif
+$endif
+
+$if[$input[rr-q-$var[id]]!=]
+$if[$roleExists[$input[rr-q-$var[id]]]==true]
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$textSplit[$json[rr-$var[id]];|]
+$var[tico;1]
+$eval[$repeatMessage[3;
+%{DOL}%if[%{DOL}%input[rr-q-%{DOL}%var[id\]\]==%{DOL}%splitText[%{DOL}%var[tico\]\]\]
+%{DOL}%removeSplitTextElement[%{DOL}%var[tico\]\]
+%{DOL}%jsonSetString[rr-%{DOL}%var[id\]\;%{DOL}%joinSplitText[|\]\]
+%{DOL}%setUserVar[ticket\;%{DOL}%jsonStringify\;%{DOL}%botID\;%{DOL}%guildID\]
+%{DOL}%var[tico-god\;si\]
+%{DOL}%stop
+%{DOL}%elseif[%{DOL}%var[tico\]>=3\]
+%{DOL}%var[tico-god\;no\]
+%{DOL}%else
+%{DOL}%var[tico\;%{DOL}%sum[%{DOL}%var[tico\]\;1\]\]
+%{DOL}%endif
+]]
+$addField[⚙️ | Configuración;$replaceText[$replaceText[$checkCondition[$var[tico-god]==si];true;Rol eliminado correctamente;1];false;Este rol no está configurado en este panel;1]]
+$color[$replaceText[$replaceText[$checkCondition[$var[tico-god]==si];true;00ff00;1];false;ff0000;1]]
+$stop
+$else
+$addField[❌ | Error;
+El rol no existe]
+$color[ff0000]
+$stop
+$endif
+$endif
+$setUserVar[paneles-ticket;$jsonStringify;$botID;$guildID]
+
+$addField[✅ | Configurado correctamente;
+La configuración ha sido agregada correctamente]
+$color[00ff00]
+$endif
+
+$c[nuevoooooi]
+
+$if[$customID==panel-ticket]
+$onlyAdmin[]
+$if[$message==embed-panel]
+$newModal[config-panel;⚙️ | Configuración del ticket 1]
+$addTextInput[titulo1;short;Titulo;;30;no;;]
+$addTextInput[descripcion1;paragraph;Descripción;;1000;no;;]
+$addTextInput[imagen1;short;Imagen (link);;;no;;]
+$addTextInput[footer1;short;Footer;;30;no;;]
+$addTextInput[color1;short;Color;;6;no;;ejemplo: ff0000]
+$elseif[$message==embed-panel-2]
+$newModal[config-panel;⚙️ | Configuración del ticket 2]
+$addTextInput[titulo2;short;Titulo;;30;no;;]
+$addTextInput[descripcion2;paragraph;Descripción;;1000;no;;]
+$addTextInput[imagen2;short;Imagen (link);;;no;;]
+$addTextInput[footer2;short;Footer;;30;no;;]
+$addTextInput[color2;short;Color;;6;no;;ejemplo: ff0000]
+$elseif[$message==rol-staff]
+$newModal[config-panel;⚙️ | Configura rol de staff]
+$addTextInput[rol;short;¿Agregar rol?;;;no;;Ejemplo: 18929299291199100]
+$addTextInput[rol-1;short;¿Eliminar rol?;;;no;;Ejemplo: 18929299291199100]
+$elseif[$message==+1]
+$onlyAdmin[]
+$newModal[config-panel;Agregar panel]
+$addTextInput[p;short;¿En qué tickets lo agregarás?;;;no;;¿ticket-1 o ticket-2?]
+$elseif[$or[$message==1;$message==2;$message==3;$message==4;$message==5]==true]
+$onlyAdmin[]
+$jsonParse[$getUserVar[paneles-ticket;$botID;$guildID]]
+Editando panel: $json[emoji-$message] | $json[name-$message]
+Mensaje de bienvenida al ticket 👇
+$title[$json[titulo-$message]]
+$description[
+$json[descripcion-$message]]
+$image[$json[imagen-$message]]
+$footer[$json[footer-$message]]
+$color[$json[color-$message]]
+$newSelectMenu[cf-paneles;0;1;Editar panel;]
+$addSelectMenuOption[cf-paneles;Mensaje de bienvenida;ms-$message;;;👋;]
+$addSelectMenuOption[cf-paneles;Nombre y emoji del panel;name-$message;;;✏️;]
+$addSelectMenuOption[cf-paneles;Categoria del ticket;ca-$message;Configurar la Categoria donde se creará el ticket;;📂;]
+$addSelectMenuOption[cf-paneles;Restringir para ciertos roles;rr-$message;Config para que solo ciertos roles puedan usar este panel;;🔧;]
+$elseif[$message==logs]
+$onlyAdmin[]
+$newModal[config-panel;Configuración del canal de logs]
+$addTextInput[logs;short;Coloca el ID del canal de registos;;;no;;Ejemplo: 190292882929221]
+$addTextInput[logs-trans;short;Coloca el ID del canal de transcripciones;;;no;;Ejemplo: 190292882929221]
+
+$elseif[$message==categoria]
+$onlyAdmin[]
+$newModal[config-panel;Configuración de la categoria]
+$addTextInput[categoria;short;Coloca el ID de la categoria;;;no;;Ejemplo: 190292882929221]
+
+$elseif[$message==-1]
+$onlyAdmin[]
+$newModal[config-panel;Borrar panel]
+$addTextInput[name-panel;short;Nombre del panel a borrar;;;no;;]
+
+$elseif[$message==cf]
+$jsonParse[$getUserVar[paneles-ticket;$botID;$guildID]]
+$var[p1;$json[emoji-1] | $json[name-1]]
+$var[p2;$json[emoji-2] | $json[name-2]]
+$var[p3;$json[emoji-3] | $json[name-3]]
+$var[p4;$json[emoji-4] | $json[name-4]]
+$var[p5;$json[emoji-5] | $json[name-5]]
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$if[$channelExists[$json[categoria-id]]==true]
+$var[t;$channelName[$json[categoria-id]]]
+$else
+$var[t;Ninguna categoria configurada]
+$endif
+$if[$json[rol]!=]
+$var[roles;$replaceText[<@&$json[rol]>;|;>, <@&;-1]]
+$else
+$var[roles;**Ningún rol configurado**]
+$endif
+$if[$json[c1]!=]
+$var[c1;> - __Categoria del panel $var[p1]:__ **$channelName[$json[c1]]**]
+$endif
+$if[$json[c2]!=]
+$var[c2;> - __Categoria del panel $var[p2]:__ **$channelName[$json[c2]]**]
+$endif
+$if[$json[c3]!=]
+$var[c3;> - __Categoria del panel $var[p3]:__ **$channelName[$json[c3]]**]
+$endif
+$if[$json[c4]!=]
+$var[c4;> - __Categoria del panel $var[p4]:__ **$channelName[$json[c4]]**]
+$endif
+$if[$json[c5]!=]
+$var[c5;> - __Categoria del panel $var[p5]:__ **$channelName[$json[c5]]**]
+$endif
+$title[👀 | Configuración actual]
+$addField[📜 | Transcripciones;
+> - $replaceText[$replaceText[$checkCondition[$json[token]!=desactivado];true;Sistema **__activado__**. Asegurate de haber colocado correctamente el token de tu bot, si no, no funcionará;1];false;Sistema **__desactivado__**;1]]
+$addField[📂 | Categorias;
+> - __Categoria global:__ **$var[t]**
+
+$var[c1]
+$var[c2]
+$var[c3]
+$var[c4]
+$var[c5]]
+$addField[🛠️ | Roles;
+> - __Roles de staff:__ $var[roles]
+
+$replaceText[$replaceText[$checkCondition[$json[rr-1]!=];true;> - __Roles permitidos del panel $var[p1]:__ $replaceText[<@&$json[rr-1]>;|;>, <@&;-1];1];false;;1]
+$replaceText[$replaceText[$checkCondition[$json[rr-2]!=];true;> - __Roles permitidos del panel $var[p2]:__ $replaceText[<@&$json[rr-2]>;|;>, <@&;-1];1];false;;1]
+$replaceText[$replaceText[$checkCondition[$json[rr-3]!=];true;> - __Roles permitidos del panel $var[p3]:__ $replaceText[<@&$json[rr-3]>;|;>, <@&;-1];1];false;;1]
+$replaceText[$replaceText[$checkCondition[$json[rr-4]!=];true;> - __Roles permitidos del panel $var[p4]:__ $replaceText[<@&$json[rr-4]>;|;>, <@&;-1];1];false;;1]
+$replaceText[$replaceText[$checkCondition[$json[rr-5]!=];true;> - __Roles permitidos del panel $var[p5]:__ $replaceText[<@&$json[rr-5]>;|;>, <@&;-1];1];false;;1]]
+$addField[🎫 | Limite de tickets abiertos a la vez;
+> - Solo pueden haber **$replaceText[$replaceText[$checkCondition[$json[lg]<=0];true;Sistema desactivado;-1];false;$json[lg];-1]** tickets abiertos en el sistema
+
+> - Solo se pueden tener abiertos **$replaceText[$replaceText[$checkCondition[$json[lg-u]<=0];true;Sistema desactivado;-1];false;$json[lg-u];-1]** tickets globalmente a la vez
+> - Solo se pueden tener abiertos **$replaceText[$replaceText[$checkCondition[$json[lp-u]<=0];true;Sistema desactivado;-1];false;$json[lp-u];-1]** tickets por panel a la vez]
+$addField[✉️ | Canales de logs (registros);
+> - **Canal de logs:** $replaceText[<#$json[logs]>;<#>;Ningún canal configurado;-1]
+> - **Canal de transcripciones:** $replaceText[<#$json[logs-trans]>;<#>;Ningún canal configurado;-1]]
+$addField[🪪 | Nombre de los tickets;
+> - El nombre con el que creará en canal de los tickets es: **$json[name-ticket]**
+> - Vista previa de ejemplo de como se vería: **$replaceText[$replaceText[$replaceText[$replaceText[$json[name-ticket];{emoji-panel};🆘;-1];{name-user};$displayName[$authorID];-1];{name-panel};Soporte;-1];{numero-ticket};$random[0;11];-1]**]
+$footer[Tickets Tico v2]
+$footerIcon[$serverIcon]
+$color[6e00ff]
+
+$elseif[$message==limite]
+$onlyAdmin[]
+$newModal[config-panel;⚙️ | Configuración de limite de tickets]
+$addTextInput[limite-sistema;short;¿Limite global del sistema?;;2;no;;Ejemplo: 10]
+$addTextInput[limite-global;short;¿Limite de tickets Global? (user);;2;no;;Ejemplo: 3]
+$addTextInput[limite-panel;short;¿Limite de tickets por panel? (user);;2;no;;Ejemplo: 1]
+
+$elseif[$message==nt]
+$onlyAdmin[]
+$newModal[config-panel;⚙️ | Configuración nombre de los tickets]
+$addTextInput[namet;short;¿Nombre de los tickets?;;70;yes;;Ejemplo: ticket de {name-user}]
+$elseif[$message==bt-mn]
+$newModal[config-panel;⚙️ | Configuración de preferencias]
+$addTextInput[bt-mn-1;short;Elige para el ticket 1;;7;no;;¿Botón o menú?]
+$addTextInput[bt-mn-2;short;Elige para el ticket 2;;7;no;;¿Botón o menú?]
+$elseif[$message==ce-tick]
+$newModal[config-panel;⚙️ | Configurar cerrar tickets]
+$addTextInput[ce-tick;short;¿Quienes cerrarán los tickets?;;8;yes;;¿staff o todos?]
+
+$elseif[$message==token]
+$onlyAdmin[]
+$newModal[config-panel;📜 | Transcripciones]
+$addTextInput[token;short;Activa o desactiva;;12;yes;;activar/desactivar]
+$addTextInput[token1;short;Token de tu bot;;;no;;MTAxMjM0NTY3ODkwOjEyMzQ1Njc4OTAyMzQ1Njc4OTAyMzQ1Njc4Ojo=
+]
+$endif
+
+$elseif[$customID==config-panel]
+$onlyAdmin[]
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$if[$or[$input[titulo1]!=;$input[descripcion1]!=;$input[imagen1]!=;$input[footer1]!=;$input[color1]!=]==true]
+$jsonSetString[titulo1;$replaceText[$replaceText[$checkCondition[$input[titulo1]==];true;$json[titulo1];1];false;$input[titulo1];1]]
+$jsonSetString[descripcion1;$replaceText[$replaceText[$checkCondition[$input[descripcion1]==];true;$json[descripcion1];1];false;$input[descripcion1];1]]
+$jsonSetString[imagen1;$replaceText[$replaceText[$checkCondition[$input[imagen1]==];true;$json[imagen1];1];false;$input[imagen1];1]]
+$jsonSetString[footer1;$replaceText[$replaceText[$checkCondition[$input[footer1]==];true;$json[footer1];1];false;$input[footer1];1]]
+$jsonSetString[color1;$replaceText[$replaceText[$isValidHex[$input[color1]];true;$input[color1];1];false;$json[color1];1]]
+$setUserVar[ticket;$jsonStringify;$botID;$guildID]
+👀 | VISTA PREVIA
+$title[$json[titulo1]]
+$description[$json[descripcion1]]
+$image[$json[imagen1]]
+$footerIcon[$serverIcon]
+$footer[$json[footer1]]
+$color[$json[color1]]
+$endif
+
+$if[$or[$input[titulo2]!=;$input[descripcion2]!=;$input[imagen2]!=;$input[footer2]!=;$input[color2]!=]==true]
+$jsonSetString[titulo2;$replaceText[$replaceText[$checkCondition[$input[titulo2]==];true;$json[titulo2];1];false;$input[titulo2];1]]
+$jsonSetString[descripcion2;$replaceText[$replaceText[$checkCondition[$input[descripcion2]==];true;$json[descripcion2];1];false;$input[descripcion2];1]]
+$jsonSetString[imagen2;$replaceText[$replaceText[$checkCondition[$input[imagen2]==];true;$json[imagen2];1];false;$input[imagen2];1]]
+$jsonSetString[footer2;$replaceText[$replaceText[$checkCondition[$input[footer2]==];true;$json[footer2];1];false;$input[footer2];1]]
+$jsonSetString[color2;$replaceText[$replaceText[$isValidHex[$input[color2]];true;$input[color2];1];false;$json[color2];1]]
+$setUserVar[ticket;$jsonStringify;$botID;$guildID]
+👀 | VISTA PREVIA
+$title[$json[titulo2]]
+$description[$json[descripcion2]]
+$image[$json[imagen2]]
+$footerIcon[$serverIcon]
+$footer[$json[footer2]]
+$color[$json[color2]]
+$endif
+
+$if[$input[token]!=]
+$if[$toLowercase[$input[token]]==activar]
+$jsonSetString[token;$input[token1]]
+$setUserVar[ticket;$jsonStringify;$botID;$guildID]
+$addField[✅ | Sistema activado;
+Sistema de transcripciones de canales activado, por favor asegurate de colocar correctamente el token de tu bot, si no, no funcionará]
+$color[00ff00]
+$else
+$jsonSetString[token;desactivado]
+$addField[✅ | Sistema activado;
+Sistema de transcripciones de canales desactivado]
+$color[00ff00]
+$endif
+$endif
+
+$if[$input[categoria]!=]
+$if[$channelExists[$input[categoria]]==true]
+$if[$checkContains[$channelType[$input[categoria]];category]==true]
+$jsonSetString[categoria-id;$input[categoria]]
+$setUserVar[ticket;$jsonStringify;$botID;$guildID]
+$addField[✅ | Configurado;
+La categoria **$channelName[$input[categoria]]** fué configurada correctamente como la categoria donde se crearán los tickets]
+$color[00ff00]
+$else
+$addField[❌ | Error;
+El ID no corresponde a una categoria]
+$color[ff0000]
+$endif
+$else
+$addField[❌ | Error;
+La categoria no existe, por favor coloca el ID	 correctamente]
+$color[ff0000]
+$endif
+$endif
+
+$if[$input[logs]!=]
+$if[$channelExists[$input[logs]]==true]
+$jsonSetString[logs;$input[logs]]
+$setUserVar[ticket;$jsonStringify;$botID;$guildID]
+$addField[✅ | Configurado;
+El canal <#$input[logs]> fué configurado como el canal de registro]
+$color[00ff00]
+$else
+$addField[❌ | Error;
+El canal no existe]
+$color[ff0000]
+$endif
+$endif
+
+$if[$input[logs-trans]!=]
+$if[$channelExists[$input[logs-trans]]==true]
+$jsonSetString[logs-trans;$input[logs-trans]]
+$setUserVar[ticket;$jsonStringify;$botID;$guildID]
+$addField[✅ | Configurado;
+El canal <#$input[logs-trans]> fué configurado como el canal donde se enviarán los tickets eliminados junto a su transcipción]
+$color[00ff00]
+$else
+$addField[❌ | Error;
+El canal no existe]
+$color[ff0000]
+$endif
+$endif
+
+$if[$input[rol]!=]
+$if[$roleExists[$input[rol]]==true]
+$textSplit[$json[rol];|]
+$var[tsp;$getTextSplitLength]
+$var[tico;1]
+$eval[$repeatMessage[10;
+%{DOL}%if[%{DOL}%checkContains[%{DOL}%json[rol\]\;%{DOL}%input[rol\]\]==true\]
+%{DOL}%var[tico-god\;no\]
+%{DOL}%stop
+%{DOL}%elseif[%{DOL}%json[rol\]==\]
+%{DOL}%jsonSetString[rol\;%{DOL}%input[rol\]\]
+%{DOL}%setUserVar[ticket\;%{DOL}%jsonStringify\;%{DOL}%botID\;%{DOL}%guildID\]
+%{DOL}%var[tico-god\;si\]
+%{DOL}%stop
+%{DOL}%elseif[%{DOL}%and[%{DOL}%getTextSplitLength<10\;%{DOL}%json[rol\]!=\]==true\]
+%{DOL}%jsonSetString[rol\;%{DOL}%json[rol\]|%{DOL}%input[rol\]\]
+%{DOL}%setUserVar[ticket\;%{DOL}%jsonStringify\;%{DOL}%botID\;%{DOL}%guildID\]
+%{DOL}%var[tico-god\;si\]
+%{DOL}%stop
+%{DOL}%elseif[%{DOL}%var[tico\]>=10\]
+%{DOL}%addField[⚙️ | Configuración\;Límite alcanzado **10/10**\]
+%{DOL}%color[ff0000\]
+%{DOL}%else
+%{DOL}%var[tico\;%{DOL}%sum[%{DOL}%var[tico\]\;1\]\]
+%{DOL}%endif
+]]
+$addField[⚙️ | Configuración;$replaceText[$replaceText[$checkCondition[$var[tico-god]==si];true;Rol agregado correctamente;1];false;Este rol ya está configurado como rol de staff;1]]
+$color[$replaceText[$replaceText[$checkCondition[$var[tico-god]==si];true;00ff00;1];false;ff0000;1]]
+$else
+$addField[❌ | Error;
+El rol no existe]
+$color[ff0000]
+$stop
+$endif
+$endif
+
+$if[$input[rol-1]!=]
+$if[$roleExists[$input[rol-1]]==true]
+$textSplit[$json[rol];|]
+$var[tico;1]
+$eval[$repeatMessage[10;
+%{DOL}%if[%{DOL}%input[rol-1\]==%{DOL}%splitText[%{DOL}%var[tico\]\]\]
+%{DOL}%removeSplitTextElement[%{DOL}%var[tico\]\]
+%{DOL}%jsonSetString[rol\;%{DOL}%joinSplitText[|\]\]
+%{DOL}%setUserVar[ticket\;%{DOL}%jsonStringify\;%{DOL}%botID\;%{DOL}%guildID\]
+%{DOL}%var[tico-god\;si\]
+%{DOL}%stop
+%{DOL}%elseif[%{DOL}%var[tico\]>=10\]
+%{DOL}%var[tico-god\;no\]
+%{DOL}%else
+%{DOL}%var[tico\;%{DOL}%sum[%{DOL}%var[tico\]\;1\]\]
+%{DOL}%endif
+]]
+$addField[⚙️ | Configuración;$replaceText[$replaceText[$checkCondition[$var[tico-god]==si];true;Rol eliminado correctamente;1];false;Este rol no está configurado como rol de staff;1]]
+$color[$replaceText[$replaceText[$checkCondition[$var[tico-god]==si];true;00ff00;1];false;ff0000;1]]
+$else
+$addField[❌ | Error;
+El rol no existe]
+$color[ff0000]
+$stop
+$endif
+$endif
+
+$if[$input[limite-sistema]!=]
+$if[$isNumber[$input[limite-sistema]]==true]
+$if[$input[limite-sistema]>0]
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$jsonSetString[lg;$input[limite-sistema]]
+$setUserVar[ticket;$jsonStringify;$botID;$guildID]
+$addField[✅ | Limite global establecido;
+Ahora en el sistema de tickets podrá haber solo **$input[limite-sistema]** tickets abiertos globalmente]
+$color[00ff00]
+$else
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$jsonSetString[lg;$input[limite-sistema]]
+$setUserVar[ticket;$jsonStringify;$botID;$guildID]
+$addField[✅ | Limite global desactivado;
+El limite de tickets del sistema ha sido desactivado, ahora no hay límite de tickets abiertos globalmente]
+$color[00ff00]
+$endif
+$else
+$addField[❌ | Error;
+Solo números, por favor]
+$color[ff0000]
+$endif
+$endif
+
+$if[$input[limite-global]!=]
+$if[$isNumber[$input[limite-global]]==true]
+$if[$input[limite-global]>0]
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$jsonSetString[lg-u;$input[limite-global]]
+$setUserVar[ticket;$jsonStringify;$botID;$guildID]
+$addField[✅ | Limite establecido;
+Ahora los usuarios solo podrá tener **$input[limite-global]** tickets abiertos globalmente a la vez]
+$color[00ff00]
+$else
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$jsonSetString[lg-u;$input[limite-global]]
+$setUserVar[ticket;$jsonStringify;$botID;$guildID]
+$addField[✅ | Limite desactivado;
+El limite de tickets global ha sido desactivado, ahora los usuarios podrán abrir todos los ticket que deseen]
+$color[00ff00]
+$endif
+$else
+$addField[❌ | Error;
+Solo números, por favor]
+$color[ff0000]
+$endif
+$endif
+
+$if[$input[limite-panel]!=]
+$if[$isNumber[$input[limite-panel]]==true]
+$if[$input[limite-panel]>0]
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$jsonSetString[lp-u;$input[limite-panel]]
+$setUserVar[ticket;$jsonStringify;$botID;$guildID]
+$addField[✅ | Limite establecido;
+Ahora los usuarios solo podrá tener **$input[limite-panel]** tickets abiertos por panel a la vez]
+$color[00ff00]
+$else
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$jsonSetString[lp-u;$input[limite-panel]]
+$setUserVar[ticket;$jsonStringify;$botID;$guildID]
+$addField[✅ | Limite desactivado;
+El limite de tickets por panel ha sido desactivado, ahora los usuarios podrán abrir todos los ticket que deseen]
+$color[00ff00]
+$endif
+$else
+$addField[❌ | Error;
+Solo números, por favor]
+$color[ff0000]
+$endif
+$endif
+
+$if[$input[namet]!=]
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$jsonSetString[name-ticket;$input[namet]]
+$setUserVar[ticket;$jsonStringify;$botID;$guildID]
+$addField[✅ | Nombre de los tickets actualizados;
+Ahora el nombre del canal con el que se crearán los tickets será **$input[namet]**
+Vista previa de ejemplo de como se vería: 
+**$replaceText[$replaceText[$replaceText[$replaceText[$input[namet];{emoji-panel};🆘;-1];{name-user};$displayName[$authorID];-1];{name-panel};Soporte;-1];{numero-ticket};$random[0;11];-1]**]
+$color[00ff00]
+$endif
+
+$if[$input[name-panel]!=]
+$jsonParse[$getUserVar[paneles-ticket;$botID;$guildID]]
+$var[tico;1]
+$eval[$repeatMessage[5;
+%{DOL}%if[%{DOL}%input[name-panel\]==%{DOL}%json[name-%{DOL}%var[tico\]\]\]
+%{DOL}%jsonSetString[%{DOL}%var[tico\]\;no\]
+%{DOL}%jsonSetString[name-%{DOL}%var[tico\]\;No configurado-%{DOL}%var[tico\]\]
+%{DOL}%jsonSetString[emoji-%{DOL}%var[tico\]\;\]
+%{DOL}%jsonSetString[titulo-%{DOL}%var[tico\]\;No configurado-%{DOL}%var[tico\]\]
+%{DOL}%jsonSetString[descripcion-%{DOL}%var[tico\]\;No configurado-%{DOL}%var[tico\]\]
+%{DOL}%jsonSetString[imagen-%{DOL}%var[tico\]\;\]
+%{DOL}%jsonSetString[footer-%{DOL}%var[tico\]\;No configurado-%{DOL}%var[tico\]\]
+%{DOL}%jsonSetString[color-%{DOL}%var[tico\]\;000000\]
+%{DOL}%addField[✅ | Panel eliminado\;
+Eliminaste correctamente el panel\]
+%{DOL}%color[00ff00\]
+%{DOL}%setUserVar[paneles-ticket\;%{DOL}%jsonStringify\;%{DOL}%botID\;%{DOL}%guildID\]
+%{DOL}%jsonParse[%{DOL}%getUserVar[ticket\;%{DOL}%botID\;%{DOL}%guildID\]\]
+%{DOL}%jsonSetString[c%{DOL}%var[tico\]\;\]
+%{DOL}%setUserVar[ticket\;%{DOL}%jsonStringify\;%{DOL}%botID\;%{DOL}%guildID\]
+%{DOL}%stop
+%{DOL}%elseif[%{DOL}%var[tico\]>=5\]
+%{DOL}addField[❌ | Error\;
+El panel no existe\]
+%{DOL}%color[ff0000\]
+%{DOL}%else
+%{DOL}%var[tico\;%{DOL}%sum[%{DOL}%var[tico\]\;1\]\]
+%{DOL}%endif
+]]
+$endif
+
+$if[$input[p]!=]
+$if[$checkContains[$toLowercase[$input[p]];ticket-1;ticket-2]==true]
+$jsonParse[$getUserVar[paneles-ticket;$botID;$guildID]]
+$var[tico;1]
+$eval[$repeatMessage[5;
+%{DOL}%if[%{DOL}%json[%{DOL}%var[tico\]\]==no\]
+%{DOL}%jsonSetString[t%{DOL}%var[tico\]\;%{DOL}%replaceText[%{DOL}%replaceText[%{DOL}%checkCondition[%{DOL}%toLowercase[%{DOL}%input[p\]\]==ticket-1\]\;true\;1\;1\]\;false\;2\;1\]\]
+%{DOL}%jsonSetString[%{DOL}%var[tico\]\;si\]
+%{DOL}%addField[✅ | Panel agregado\;
+El panel fué agregado correctamente al **%{DOL}%input[p\]**, ahora solo falta que los edites :). 
+
+Usa nuevamente el comando para configurar para que apareza tu nuevo panel
+
+**Ejemplo:** 
+!tickets config\]
+%{DOL}%color[00ff00\]
+%{DOL}%stop
+%{DOL}%elseif[%{DOL}%and[%{DOL}%json[5\]==si\;%{DOL}%var[tico\]==5\]==true\]
+%{DOL}%addField[❌ | Error\;
+Ya alcanzaste el limite de paneles 5/5\]
+%{DOL}%color[ff0000\]
+%{DOL}%else
+%{DOL}%var[tico\;%{DOL}%sum[%{DOL}%var[tico\]\;1\]\]
+%{DOL}%endif
+]]
+$setUserVar[paneles-ticket;$jsonStringify;$botID;$guildID]
+$else
+$addField[⚙️ | Configuración; Solo "ticket-1" o "ticket-2"]
+$color[ff0000]
+$endif
+$endif
+
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$if[$input[bt-mn-1]!=]
+$if[$checkContains[$toLowercase[$input[bt-mn-1]];botón;menú;boton;menu]==true]
+$jsonSetString[ty-1;$replaceText[$replaceText[$checkCondition[$or[$toLowercase[$input[bt-mn-1]]==boton;$toLowercase[$input[bt-mn-1]]==botón]==true];true;1;1];false;2;1]]
+$setUserVar[ticket;$jsonStringify;$botID;$guildID]
+$addField[✅ | Configurado;
+Se configuró correctamente tu preferencias para el sistema de tickets 1, elegistes usar **botón**]
+$color[00ff00]
+$else
+$addField[❌ | Error;
+Solo **"botón o menú"**]
+$color[ff0000]
+$endif
+$endif
+
+$if[$input[bt-mn-2]!=]
+$if[$checkContains[$toLowercase[$input[bt-mn-2]];botón;menú;boton;menu]==true]
+$jsonSetString[ty-2;$replaceText[$replaceText[$checkCondition[$or[$toLowercase[$input[bt-mn-2]]==boton;$toLowercase[$input[bt-mn-2]]==botón]==true];true;1;1];false;2;1]]
+$setUserVar[ticket;$jsonStringify;$botID;$guildID]
+$addField[✅ | Configurado;
+Se configuró correctamente tu preferencias para el sistema de tickets 2, elegistes usar **menú**]
+$color[00ff00]
+$else
+$addField[❌ | Error;
+Solo **"botón o menú"**]
+$color[ff0000]
+$endif
+$endif
+
+$if[$input[ce-tick]!=]
+$if[$checkContains[$toLowercase[$input[ce-tick]];staff;todo]==true]
+$jsonSetString[ce;$replaceText[$replaceText[$checkCondition[$toLowercase[$input[ce-tick]]==staff];true;1;1];false;2;1]]
+$setUserVar[ticket;$jsonStringify;$botID;$guildID]
+$addField[✅ | Configurado;
+Se configuró correctamente tu preferencias, ahora $replaceText[$replaceText[$checkCondition[$toLowercase[$input[ce-tick]]==staff];true;solo el staff podrá cerrar los tickets y eliminarlos;1];false;todos podrán cerrar los tickets y eliminarlos;1]]
+$color[00ff00]
+$else
+$addField[❌ | Error;
+Solo **"staff o todos"**]
+$color[ff0000]
+$endif
+$endif
+
+$elseif[$or[$customID==recl;$customID==rea;$customID==val;$customID==eliminar;$customID==cerr;$customID==1;$customID==2;$customID==3;$customID==4;$customID==5;$customID==tickets]==true]
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$textSplit[$json[rol];|]
+$var[tico;1]
+$eval[$repeatMessage[$getTextSplitLength;
+%{DOL}%if[%{DOL}%var[tico\]<=%{DOL}%getTextSplitLength\]
+%{DOL}%if[%{DOL}%hasRole[%{DOL}%authorID\;%{DOL}%splitText[%{DOL}%var[tico\]\]\]==true\]
+%{DOL}%var[pr\;true\]
+%{DOL}%stop
+%{DOL}%else
+%{DOL}%var[tico\;%{DOL}%sum[%{DOL}%var[tico\]\;1\]\]
+%{DOL}%endif
+%{DOL}%endif
+]]
+
+$if[$customID==cerr]
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$if[$or[$json[ce]==2;$var[pr]==true]==true]
+$newModal[abrir-cerrar-valorar;🔒 | Cerrar ticket]
+$addTextInput[razon-cerrar;short;¿Razón de cerrar el ticket?;;;yes;;]
+$else
+$addField[❌ | Error;
+No tenes permisos para cerrar tickets :)]
+$color[ff0000]
+$endif
+$elseif[$or[$customID==1;$customID==2;$customID==3;$customID==4;$customID==5;$customID==tickets]==true]
+$if[$and[$customID==tickets;$message==]==true]
+$stop
+$endif
+$removeAllComponents
+$ephemeral
+$jsonParse[$getUserVar[info-ticket;$authorID;$guildID]]
+$var[tickets-global;$json[tickets-global]]
+$if[$json[bloqueado]==si]
+$addField[❌ | Uppss...;
+> - <@$authorID>, lo sentimos pero no puedes abrir ticket porque estás bloqueado del sistema
+> - **Razón:** ``$json[razon]``
+> - **Fecha del bloqueo:** ``$json[fecha]``
+> - **Responsable:** <@$json[staff]>]
+$color[ff0000]
+$stop
+$endif
+
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$var[rol;$json[rol]]
+$var[limite-panel;$json[lp-u]]
+
+$if[$and[$json[lg]>0;$json[num-tickets]>=$json[lg]]==true]
+$addField[❌ | Error;
+El sistema ha alcanzado el límite de tickets, espera a que se cierre uno]
+$color[ff0000]
+$stop
+$endif
+
+$if[$and[$json[lg-u]>0;$var[tickets-global]>=$json[lg-u]]==true]
+$addField[❌ | Error;
+Solo puedes tener **$json[lg-u]** tickets abiertos globalmente a la vez]
+$color[ff0000]
+$stop
+$endif
+
+$jsonParse[$getUserVar[info-ticket;$authorID;$guildID]]
+$if[$customID==tickets]
+$jsonSetString[panel-id;$message]
+$var[id;$message]
+$else
+$jsonSetString[panel-id;$customID]
+$var[id;$customID]
+$endif
+$setUserVar[info-ticket;$jsonStringify;$authorID;$guildID]
+
+$jsonParse[$getUserVar[info-ticket;$authorID;$guildID]]
+$if[$and[$var[limite-panel]>0;$json[tickets-panel-$json[panel-id]]>=$var[limite-panel]]==true]
+$addField[❌ | Error;
+Solo puedes tener **$var[limite-panel]** tickets abiertos por panel a la vez]
+$color[ff0000]
+$stop
+$endif
+
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$textSplit[$json[rr-$var[id]];|]
+$if[$roleExists[$splitText[1]]==true]
+$var[tico;1]
+$eval[$repeatMessage[3;
+%{DOL}%if[%{DOL}%hasRole[%{DOL}%authorID\;%{DOL}%splitText[%{DOL}%var[tico\]\]\]==true\]
+%{DOL}%stop
+%{DOL}%elseif[%{DOL}%var[tico\]>=3\]
+%{DOL}%addField[❌ | Uppss...\;
+Este panel tiene restricción por rol, y vos no tenes el rol o roles que se requiere para poder abrir ticket\]
+%{DOL}%color[ff0000\]
+%{DOL}%var[stop\;si\]
+%{DOL}%else
+%{DOL}%var[tico\;%{DOL}%sum[%{DOL}%var[tico\]\;1\]\]
+%{DOL}%endif
+]]
+$endif
+$if[$var[stop]==si]
+$stop
+$endif
+
+$newModal[abrir-cerrar-valorar;🗃️ | Abrir ticket]
+$addTextInput[razon-abrir;short;¿Razón de abrir ticket?;;;yes;;]
+$elseif[$customID==eliminar]
+$defer
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$if[$or[$json[ce]==2;$var[pr]==true]==true]
+$deleteMessage[$channelID;$messageID]
+$sendEmbedMessage[$channelID;;
+🗑️ | Eliminando ticket...;;
+El ticket será eliminado <t:$calculate[$getTimestamp+5]:R>;
+6e00ff;;;;;;;yes;]
+$async[si]
+$replyIn[5s]
+$endasync
+$await[si]
+
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$if[$json[num-tickets]>0]
+$jsonSetString[num-tickets;$sub[$json[num-tickets];1]]
+$else
+$jsonSetString[num-tickets;0]
+$endif
+$setUserVar[ticket;$jsonStringify;$botID;$guildID]
+
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$if[$json[token]!=desactivado]
+$httpAddHeader[Authorization;$json[token]]
+$httpPost[https://api.erxproject.xyz/discord/transcript/$guildID/$channelID]
+$if[$httpResult[error]!=]
+$var[url;https://youtu.be/Yc-7IQqcqeM?feature=shared]
+$else
+$var[url;$httpResult[url]]
+$endif
+$else
+$var[url;https://youtu.be/Yc-7IQqcqeM?feature=shared]
+$endif
+
+$jsonParse[$getChannelVar[info-ticket;$channelID]]
+$var[panel;$json[panel]]
+$var[dueño;$json[dueño]]
+$var[razon;$json[razon]]
+$var[staff;$json[staff]]
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$if[$channelExists[$json[logs-trans]]==true]
+$var[trans;$sendEmbedMessage[$json[logs-trans];;
+🗒️ | Logs Tickets;;
+## 🗑️ | Ticket eliminado
+
+> - **🔎 | Panel:** $var[panel]
+
+> - **👑 | Dueño del ticket:** <@$var[dueño]>
+> - **🆔 | ID de usuario:** ``$var[dueño]``
+> - **⛔ | Razón del ticket:** ``$var[razon]``
+
+> - **🎫 | Atendido por:** $replaceText[<@$var[staff]>;<@>;No fué reclamado;-1]
+> - **🆔 | ID de usuario:** $replaceText[``$var[staff]``;````;;-1]
+
+> - **👔 | Eliminado por:** <@$authorID>
+> - **🆔 | ID de usuario:** ``$authorID``
+
+> - **✉️ | Canal:** ``$channelName[$channelID]``
+> - **🆔 | ID del canal:** ``$channelID``
+
+> - **⛔ | Razón de la eliminación:** ``Eliminado por que ya fué resuelto``;ff0000;;;$serverName[$guildID];$serverIcon;;;;yes]]
+$async[tr-log]
+$useChannel[$json[logs-trans]]
+$addButton[no;$var[url];Transcripción;link;;🎫;$var[trans]]
+$endasync
+$await[tr-log]
+$endif
+$deleteChannels[$channelID]
+$else
+$addField[❌ | Error;
+No tenes permisos para eliminar tickets :)]
+$color[ff0000]
+$endif
+$elseif[$customID==val]
+$jsonParse[$getChannelVar[info-ticket;$channelID]]
+$if[$json[dueño]==$authorID]
+$newModal[abrir-cerrar-valorar;🌟 | Valorar atención recibida]
+$addTextInput[est;short;Estrellas;;2;yes;;Ejemplo: 10]
+$addTextInput[com;paragraph;Comentarios;;;yes;;]
+$else
+$addField[❌ | Error;
+Solo el dueño del ticket puede dar una valoración]
+$color[ff0000]
+$endif
+
+$elseif[$customID==rea]
+$if[$var[pr]==true]
+$else
+$addField[❌ | Error;
+No tenes permisos para reabrir tickets :)]
+$color[ff0000]
+$stop
+$endif
+$async[b]
+$deleteMessage[$channelID;$messageID]
+$endasync
+
+$await[b]
+$jsonParse[$getChannelVar[info-ticket;$channelID]]
+$var[dueño;$json[dueño]]
+$var[staff;$json[staff]]
+$var[VB;$json[mess-id]]
+$var[panel;$json[panel]]
+$jsonSetString[ab;si]
+$setChannelVar[info-ticket;$jsonStringify;$channelID]
+$if[$var[staff]!=]
+$editChannelPerms[$channelID;$var[staff];+sendmessages]
+$endif
+$editChannelPerms[$channelID;$var[dueño];+readmessagehistory;+sendmessages;+readmessages;+attachfiles]
+
+$jsonParse[$getUserVar[info-ticket;$var[dueño];$guildID]]
+$jsonSetString[tickets-global;$sum[$json[tickets-global];1]]
+$jsonSetString[tickets-panel-$json[panel-id];$sum[$json[tickets-panel-$json[panel-id]];1]]
+$setUserVar[info-ticket;$jsonStringify;$var[dueño];$guildID]
+
+$sendEmbedMessage[$channelID;;
+🖋️ | Ticket reabierto;;
+El ticket fué reabierto correctamente;ff9000;;;;;;;yes;]
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$if[$channelExists[$json[logs]]==true]
+$sendEmbedMessage[$json[logs];;
+🗒️ | Logs Tickets;;
+## 🖋️ | Ticket reabierto
+
+> - **🔎 | Panel:** $var[panel]
+
+> - **👑 | Dueño del ticket:** <@$var[dueño]>
+> - **🆔 | ID de usuario:** ``$var[dueño]``
+
+> - **👔 | Reabierto por:** <@$authorID>
+> - **🆔 | ID de usuario:** ``$authorID``
+
+> - **✉️ | Canal:** ``$channelName[$channelID]``
+> - **🆔 | ID del canal:** ``$channelID``
+;ff9000;;;;$serverIcon;;;;]
+$endif
+$editButton[recl;Reclamar;success;;👔;$var[VB]]
+$editButton[cerr;Cerrar;danger;;⛔;$var[VB]]
+
+$elseif[$customID==recl]
+$defer
+$if[$var[pr]==true]
+$else
+$addField[❌ | Error;
+No tenes permisos para reclamar tickets :)]
+$color[ff0000]
+$stop
+$endif
+$jsonParse[$getChannelVar[info-ticket;$channelID]]
+$var[dueño;$json[dueño]]
+$var[staff;$json[staff]]
+$var[panel;$json[panel]]
+$if[$json[staff]==]
+$jsonSetString[staff;$authorID]
+$setChannelVar[info-ticket;$jsonStringify;$channelID]
+$sendEmbedMessage[$channelID;;
+✅ | Ticket reclamado;;
+**👔 Staff:** <@$authorID>
+
+Si deseas retirar la reclamación dale nuevamente al botón de **👔 | Reclamar**;00ff00;;;;;;;;]
+
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$editChannelPerms[$channelID;$authorID;+sendmessages]
+$if[$channelExists[$json[logs]]==true]
+$sendEmbedMessage[$json[logs];;
+🗒️ | Logs Tickets;;
+## 👔 | Ticket Reclamado
+
+> - **🔎 | Panel:** $var[panel]
+
+> - **👤 | Reclamado por:** <@$authorID>
+> - **🆔 | ID de usuario:** ``$authorID``
+
+> - **👑 | Dueño del ticket:** <@$var[dueño]>
+> - **🆔 | ID del dueño:** ``$var[dueño]``
+
+> - **✉️ | Canal:** ``$channelName[$channelID]``
+> - **🆔 | ID del canal:** ``$channelID``;6e00ff;;;;$serverIcon;;;;]
+$endif
+$elseif[$authorID==$json[staff]]
+$jsonSetString[staff;]
+$setChannelVar[info-ticket;$jsonStringify;$channelID]
+
+$sendEmbedMessage[$channelID;;
+✅ | Ticket libre;;
+El staff <@$authorID> ha retirado la reclamación del ticket, ahora el mismo queda libre para que sea atendido por otro staff;00ff00;;;;;;;;]
+
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$editChannelPerms[$channelID;$authorID;-sendmessages]
+$if[$channelExists[$json[logs]]==true]
+$sendEmbedMessage[$json[logs];;
+🗒️ | Logs Tickets;;
+## 👔 | Reclamación retirada
+
+> - **🔎 | Panel:** $var[panel]
+
+> - **👤 | Retirada por:** <@$authorID>
+> - **🆔 | ID de usuario:** ``$authorID``
+
+> - **👑 | Dueño del ticket:** <@$var[dueño]>
+> - **🆔 | ID del dueño:** ``$var[dueño]``
+
+> - **✉️ | Canal:** ``$channelName[$channelID]``
+> - **🆔 | ID del canal:** ``$channelID``;6e00ff;;;;$serverIcon;;;;]
+$endif
+$else
+$addField[❌ | Error;
+<@$authorID>, este ticket ya fué reclamado por el staff <@$var[staff]>]
+$color[ff0000]
+$endif
+$endif
+$endif
