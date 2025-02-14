@@ -11,7 +11,7 @@ Si deseas activar el sistema de tickets 1 sigue este formato:
 > - Formato: ``$commandTrigger 1 <Lo que quieres que se muestre en el menú (opcional)>``
 
 Si deseas activar el sistema de tickets 2 sigue este formato:
-> - Formato: ``$commandTrigger 1 <Lo que quieres que se muestre en el menú (opcional)>``
+> - Formato: ``$commandTrigger 2 <Lo que quieres que se muestre en el menú (opcional)>``
 
 -# Si tienes problemas abre hilo en https://discord.com/channels/1308480254733586582/1308482678961733693 o en https://discord.com/channels/1077968892535775262/1093912751497293925 y etiquetame (<@635160512832733185>)]
 $color[ff0000]
@@ -30,6 +30,7 @@ El sistema fué testeado a lo que más da, por cuál se puede asegurar que funci
 **IMPORTANTE:**
 > - Si encuentras un error reportarlo abriendo un hilo en https://discord.com/channels/1308480254733586582/1308482678961733693 o en https://discord.com/channels/1077968892535775262/1093912751497293925 y etiquetandome (<@635160512832733185>).
 > - __**NO**__ doy soporte si __**modificas el código y/o variables**__ (__**NO**__ me romperé la cabeza buscando donde la cagaste .-.), si lo modificas es por que le sabes :)
+> - Recuerda leer la documentación: [Documentación\](https://github.com/Tico-oficial/Tickets-TicoV2/blob/main/Documentaci%C3%B3n.md)
 
 -# **__CREDITOS__**
 > - -# **Creador:** <@635160512832733185>
