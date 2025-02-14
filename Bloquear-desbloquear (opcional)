@@ -1,5 +1,35 @@
 ESTA PARTE DEL SISTEMA ES OPCIONAL, PERO SI QUIERES BLOQUEAR O DESBLOQUEAR USUARIOS DE LOS TICKETS PUEDES AGRERARLO
 
+Este es en slash
+
+tigger: bloquear (o el que quieras)
+
+opciones:
+1-
+nombre: usuario
+Tipo: user
+Requerido?: sí
+
+2- 
+nombre: razón
+Tipo: text
+Requerido?: no
+
+3-
+nombre: bloquear-desbloquear
+Tipo: text
+Requerido?: sí
+
+Opciones predefenidas?: sí
+1-
+nombre: Bloquear usuario
+valor: bloquear
+
+2-
+nombre: Desbloquear usuario
+valor: desbloquear
+
+
 
 $nomention
 $suppressErrors
