@@ -35,9 +35,10 @@ Este sistema cuenta con 3 Palabras claves, las cual son: **{tagg-user}, {tagg-ro
 > Con esta función indicarás cual es el rol de staff, el cual podrá ver los tickets, atender, cerrar y/o bloquear usuarios del sistema de tickets. Puedes configurar hasta 10 roles de staff
 
 **🔧 | Restricción por rol:**
-> En esta función podrás configurar los roles que podrán abrir ticket en un en específico, es decir; si configuras el rol @boosters, esto quiere decir que solo los que tiene este rol podrán abrir ticket en el panel que se configuró el rol.
+> En esta función podrás configurar los roles que podrán abrir ticket en un panel en específico, es decir; si configuras el rol @boosters, esto quiere decir que solo los que tiene este rol podrán abrir ticket en el panel que se configuró el rol, a los demás que intenten abrir ticket y no tengan el rol o les permitidos les arrojará error de que el panel tiene restricción por rol y que no cuenta con el rol o roles especificados
 
 > Se puede configurar 3 roles como máximo para cada panel
+
 **🎫 | Limite de tickets:**
 > Esto tiene con función limitar la cantidad de tickets abiertos que un usuario puede tener a la misma vez.
 
@@ -62,13 +63,16 @@ Este sistema cuenta con 3 Palabras claves, las cual son: **{tagg-user}, {tagg-ro
 > **__Ejemplos de uso:__**
 
 > - **{emoji-panel}-{name-user}**
-> - **Resultado:** 🆘-$displayName[$authorID]
+> - **Resultado:** 🆘-Tico#
 
 > - Ticket-**{numero-ticket}**
 > - **Resultado:** Ticket-6
 
 > - Ticket de **{name-panel}**
 > - **Resultado:** Ticket-de-Soporte]
+
+**🔒 | ¿Quiens podrán cerrar los tickets?:**
+> Con esta función podrás configurar quienes tendrán permitido cerrar y eliminar los tickets, puedes configurar si solo el staff o todos. Si configuras que todos, el staff y el dueño del ticket podrán cerralo y eliminarlo
 
 **✅ | Agregar panel**
 > Está función es para agregar un nuevo panel a tus tickets tipo "Soporte, Alianza, Compras, etc..." con un máximo de 5 paneles, cada panel también es personalizable 😎. Al crear un nuevo panel se te pedirá indicar a que sistema de tickets quieres agregarlo, si al **ticket-1** o **ticket-2**.
