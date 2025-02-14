@@ -1,0 +1,371 @@
+PREFIJO: $onInteraction[abrir-cerrar-valorar]
+
+$nomention
+$defer
+$removeAllComponents
+$if[$input[razon-abrir]!=]
+$botTyping
+
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$var[name-ticket;$json[name-ticket]]
+$var[categoria-id;$json[categoria-id]]
+$var[rol;$json[rol]]
+$var[logs;$json[logs]]
+$jsonSetString[num-tickets;$sum[$json[num-tickets];1]]
+$var[num-tickets;$json[num-tickets]]
+$setUserVar[ticket;$jsonStringify;$botID;$guildID]
+
+$var[si-ex;$findChannel[$replaceText[$var[name-ticket];{numero-ticket};$var[num-tickets];-1]]]
+$if[$channelExists[$var[si-ex]]==true]
+$var[num-tickets;$sum[$var[num-tickets];1]]
+$endif
+
+$jsonParse[$getUserVar[info-ticket;$authorID;$guildID]]
+$jsonSetString[tickets-global;$sum[$json[tickets-global];1]]
+$jsonSetString[tickets-panel-$json[panel-id];$sum[$json[tickets-panel-$json[panel-id]];1]]
+$setUserVar[info-ticket;$jsonStringify;$authorID;$guildID]
+$if[$charCount[$displayName[$authorID]]<=27]
+$var[name;$displayName[$authorID]]
+$else
+$var[name;User]
+$endif
+
+$jsonParse[$getUserVar[info-ticket;$authorID;$guildID]]
+$var[pl-id;$json[panel-id]]
+$jsonParse[$getUserVar[paneles-ticket;$botID;$guildID]]
+$var[p-e;$json[emoji-$var[pl-id]]]
+$var[p-n;$json[name-$var[pl-id]]]
+$var[t;$json[titulo-$var[pl-id]]]
+$var[d;$json[descripcion-$var[pl-id]]]
+$var[i;$json[imagen-$var[pl-id]]]
+$var[f;$json[footer-$var[pl-id]]]
+$var[c;$json[color-$var[pl-id]]]
+
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$if[$channelExists[$json[c$var[pl-id]]]==true]
+$var[categoria-id;$json[c$var[pl-id]]]
+$endif
+
+$var[id;$newTicket[$var[categoria-id];hola;yes;;Error message;0;yes]]
+$var[ch;$findChannel[ticket-0]]
+$modifyChannel[$var[ch];$replaceText[$replaceText[$replaceText[$replaceText[$var[name-ticket];{emoji-panel};$var[p-e];-1];{name-user};$var[name];-1];{name-panel};$var[p-n];-1];{numero-ticket};$var[num-tickets];-1];;;;]
+
+$deleteMessage[$var[ch];$var[id]]
+
+$async[esperar]
+$editChannelPerms[$var[ch];$authorID;+readmessagehistory;+sendmessages;+readmessages;+attachfiles]
+$var[tico;1]
+$textSplit[$var[rol];|]
+$eval[$repeatMessage[$getTextSplitLength;
+%{DOL}%if[%{DOL}%var[tico\]<=%{DOL}%getTextSplitLength\]
+%{DOL}%editChannelPerms[%{DOL}%var[ch\]\;%{DOL}%splitText[%{DOL}%var[tico\]\]\;+readmessagehistory\;-sendmessages\;+readmessages\;+slashcommands\;+mentioneveryone\;+attachfiles\]
+%{DOL}%var[na-rol\;%{DOL}%var[na-rol\]%{DOL}%roleName[%{DOL}%splitText[%{DOL}%var[tico\]\]\]|\]
+%{DOL}%var[tagg-rol\;%{DOL}%var[tagg-rol\] <@&%{DOL}%splitText[%{DOL}%var[tico\]\]> |\]
+%{DOL}%endif
+%{DOL}%var[tico\;%{DOL}%sum[%{DOL}%var[tico\]\;1\]\]
+]]
+$editChannelPerms[$var[ch];$findRole[@everyone];-readmessages]
+$endasync
+$await[esperar]
+
+$if[$channelExists[$var[logs]]==true]
+$sendEmbedMessage[$var[logs];;
+🗒️ | Logs Tickets;;
+## 🗃️ | Ticket abierto
+
+> - **🔎 | Panel:** $var[p-e] | $var[p-n]
+
+> - **👤 | Abierto por:** <@$authorID>
+> - **🆔 | ID de usuario:** ``$authorID``
+> - **⛔ | Razón:** ``$input[razon-abrir]``
+
+> - **✉️ | Canal:** ``$channelName[$var[ch]]``
+> - **🆔 | ID del canal:** ``$var[ch]``;00ff00;;;$serverName[$guildID];$serverIcon;;;;]
+$endif
+$jsonParse[$getChannelVar[info-ticket;$var[ch]]]
+$jsonSetString[dueño;$authorID]
+$jsonSetString[panel;$var[p-e] | $var[p-n]]
+$jsonSetString[razon;$input[razon-abrir]]
+$jsonSetString[ab;si]
+$setChannelVar[info-ticket;$jsonStringify;$var[ch]]
+
+$var[H;$sendEmbedMessage[$var[ch];
+> - **🏷️ | Taggs:** || <@$authorID> | $var[tagg-rol] ||
+> - **⌛ | Abierto:** <t:$getTimestamp:R>;
+$replaceText[$replaceText[$replaceText[$var[t];{tagg-user};$nickname[$authorID];-1];{tagg-rol};$var[na-rol];-1];{razon};$input[razon-abrir];-1];;
+$replaceText[$replaceText[$replaceText[$var[d];{tagg-user};<@$authorID>;-1];{tagg-rol};$var[tagg-rol];-1];{razon};$input[razon-abrir];-1];$var[c];;;$var[f];$serverIcon[$guildID];$userAvatar[$authorID];$var[i];;yes]]
+
+$useChannel[$var[ch]]
+$addButton[no;recl;Reclamar;success;;👔;$var[H]]
+$addButton[no;cerr;Cerrar;danger;;🔒;$var[H]]
+
+$ephemeral
+$thumbnail[$authorAvatar]
+$title[🗃️ | Ticket abierto]
+$description[<@$authorID> su ticket fué creado en <#$var[ch]>]
+$footer[$serverName[$guildID]]
+$footerIcon[$serverIcon[$guildID]]
+$color[00ff00]
+$addButton[no;https://discord.com/channels/$guildID/$var[ch];Ticket;link;;🎫;]
+
+$elseif[$input[razon-cerrar]!=]
+
+$jsonParse[$getChannelVar[info-ticket;$channelID]]
+$var[dueño;$json[dueño]]
+$var[staff;$json[staff]]
+$var[panel;$json[panel]]
+$var[razon;$json[razon]]
+$jsonSetString[mess-id;$messageID]
+$jsonSetString[ab;no]
+$setChannelVar[info-ticket;$jsonStringify;$channelID]
+
+$jsonParse[$getUserVar[info-ticket;$var[dueño];$guildID]]
+$if[$json[tickets-global]>0]
+$jsonSetString[tickets-global;$sub[$json[tickets-global];1]]
+$else
+$jsonSetString[tickets-global;0]
+$endif
+$setUserVar[info-ticket;$jsonStringify;$var[dueño];$guildID]
+$jsonParse[$getUserVar[info-ticket;$var[dueño];$guildID]]
+$if[$json[tickets-panel-$json[panel-id]]>0]
+$jsonSetString[tickets-panel-$json[panel-id];$sub[$json[tickets-panel-$json[panel-id]];1]]
+$else
+$jsonSetString[tickets-panel-$json[panel-id];0]
+$endif
+$setUserVar[info-ticket;$jsonStringify;$var[dueño];$guildID]
+
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$if[$json[token]!=desactivado]
+$httpAddHeader[Authorization;$json[token]]
+$httpPost[https://api.erxproject.xyz/discord/transcript/$guildID/$channelID]
+$if[$httpResult[error]!=]
+$var[url;https://youtu.be/Yc-7IQqcqeM?feature=shared]
+$else
+$var[url;$httpResult[url]]
+$endif
+$else
+$var[url;https://youtu.be/Yc-7IQqcqeM?feature=shared]
+$endif
+$var[log-trans;$json[logs]]
+$if[$channelExists[$json[logs]]==true]
+$sendEmbedMessage[$json[logs];;
+🗒️ | Logs Tickets;;
+## 🔒 | Ticket cerrado
+
+> - **🔎 | Panel:** $var[panel]
+
+> - **👑 | Dueño del ticket:** <@$var[dueño]>
+> - **🆔 | ID de usuario:** ``$var[dueño]``
+> - **⛔ | Razón del ticket:** ``$var[razon]``
+
+> - **🎫 | Atendido por:** $replaceText[<@$var[staff]>;<@>;No fué reclamado;-1]
+> - **🆔 | ID de usuario:** $replaceText[``$var[staff]``;````;;-1]
+
+> - **👔 | Cerrado por:** <@$authorID>
+> - **🆔 | ID de usuario:** ``$authorID``
+
+> - **✉️ | Canal:** ``$channelName[$channelID]``
+> - **🆔 | ID del canal:** ``$channelID``
+
+> - **⛔ | Razón del cierre:** ``$input[razon-cerrar]``;ff0000;;;$serverName[$guildID];$serverIcon;;;;]
+$endif
+
+$if[$isUserDMEnabled[$var[dueño]]==true]
+$var[trans-md;$sendEmbedMessage[$dmChannelID[$var[dueño]];;
+🔒 | Ticket cerrado;;
+<@$var[dueño]>, tu ticket fue cerrado
+
+> - **🔎 | Panel:** $var[panel]
+> - **⛔ | Razón del ticket:** ``$var[razon]``
+
+> - **👔 | Staff:** <@$authorID>
+
+> - **⛔ | Razón del cierre:** ``$input[razon-cerrar]``;
+ff0000;;;$serverName[$guildID];$serverIcon;;;;yes]]
+$async[tr-log-2]
+$useChannel[$dmChannelID[$var[dueño]]]
+$addButton[no;$var[url];Transcripción;link;;🎫;$var[trans-md]]
+$endasync
+$await[tr-log-2]
+$endif
+$async[es]
+$editChannelPerms[$channelID;$var[dueño];+readmessages;-sendmessages]
+$editChannelPerms[$channelID;$var[staff];-sendmessages]
+$endasync
+
+$await[es]
+
+$async[bot]
+$editButton[recl;Reclamar;success;yes;👔;$messageID]
+$editButton[cerr;Cerrar;danger;yes;🔒;$messageID]
+
+$var[JK;$sendEmbedMessage[$channelID;;
+🔒 | Ticket cerrado;;
+¿Deseas eliminar el ticket o esperará la valoración del usuario? (después de la valoración, el ticket será eliminado automáticamente).
+
+Si el ticket no es valorado <t:$calculate[$getTimestamp+3600]:R>, el mismo será eliminado automáticamente
+$var[descripcion];6e00ff;;;;;;;yes;yes]]
+$addButton[no;eliminar;Eliminar;danger;;🗑️;$var[JK]]
+$addButton[no;val;Valorar;primary;;🌟;$var[JK]]
+$addButton[no;rea;Reabrir;success;;🖋️;$var[JK]]
+$endasync
+
+$await[bot]
+
+$async[ti]
+$replyIn[1800]
+$endasync
+$await[ti]
+$async[ju]
+$replyIn[1800]
+$endasync
+$await[ju]
+
+$jsonParse[$getChannelVar[info-ticket;$channelID]]
+$if[$json[ab]==no]
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$if[$json[num-tickets]>0]
+$jsonSetString[num-tickets;$sub[$json[num-tickets];1]]
+$else
+$jsonSetString[num-tickets;0]
+$endif
+$setUserVar[ticket;$jsonStringify;$botID;$guildID]
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$if[$channelExists[$json[logs-trans]]==true]
+$var[trans;$sendEmbedMessage[$json[logs-trans];;
+🗒️ | Logs Tickets;;
+## 🗑️ | Ticket eliminado
+
+> - **🔎 | Panel:** $var[panel]
+
+> - **👑 | Dueño del ticket:** <@$var[dueño]>
+> - **🆔 | ID de usuario:** ``$var[dueño]``
+> - **⛔ | Razón del ticket:** ``$var[razon]``
+
+> - **🎫 | Atendido por:** $replaceText[<@$var[staff]>;<@>;No fué reclamado;-1]
+> - **🆔 | ID de usuario:** $replaceText[``$var[staff]``;````;;-1]
+
+> - **👔 | Eliminado por:** <@$botID>
+> - **🆔 | ID de usuario:** ``$botID``
+
+> - **✉️ | Canal:** ``$channelName[$channelID]``
+> - **🆔 | ID del canal:** ``$channelID``
+
+> - **⛔ | Razón de la eliminación:** ``Eliminado automáticamente porque NO fué valorado``;ff0000;;;$serverName[$guildID];$serverIcon;;;;yes]]
+$async[tr-log]
+$useChannel[$json[logs-trans]]
+$addButton[no;$var[url];Transcripción;link;;🎫;$var[trans]]
+$endasync
+$await[tr-log]
+$endif
+$deleteChannels[$channelID]
+$endif
+
+$elseif[$and[$input[est]!=;$input[com]!=]==true]
+$if[$isNumber[$input[est]]==true]
+$if[$input[est]<11]
+$else
+$ephemeral
+$addField[❌ | Error;
+Solo se puede dar una máximo de 10 estrellas]
+$color[ff0000]
+$stop
+$endif
+$else
+$ephemeral
+$addField[❌ | Error;
+Por favor, en estrellas colocar solo números]
+$color[ff0000]
+$stop
+$endif
+$jsonParse[$getChannelVar[info-ticket;$channelID]]
+$var[panel;$json[panel]]
+$var[dueño;$json[dueño]]
+$var[razon;$json[razon]]
+$var[staff;$json[staff]]
+$sendEmbedMessage[$channelID;;
+🌟 | Atención valorada;;
+El usuario <@$json[dueño]> ha valorado la atención recibida.
+
+**Estrellas:** $input[est]/10
+**Comentario:** $input[com];ffff00;;;;;;;yes;]
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$if[$channelExists[$json[logs]]==true]
+$sendEmbedMessage[$json[logs];;
+🗒️ | Logs Tickets;;
+## 🌟 | Ticket valorado
+
+> - **🔎 | Panel:** $var[panel]
+
+> - **👑 | Dueño:** <@$var[dueño]>
+> - **🆔 | ID de usuario:** ``$var[dueño]``
+> - **⛔ | Razón del ticket:** ``$var[razon]``
+
+> - **👔 | Atendido por:** $replaceText[<@$var[staff]>;<@>;Nadie;-1]
+> - **🆔 | ID de usuario:** $replaceText[``$var[staff]``;````;;-1]
+
+> - **🌟 | Estrellas:** ``$input[est]/10``
+> - **💬 | Comentario:** ``$input[com]``
+
+> - **✉️ | Canal:** ``$channelName[$channelID]``
+> - **🆔 | ID del canal:** ``$channelID``;ffff00;;;$serverName[$guildID];$serverIcon;;;;]
+$endif
+$deleteMessage[$channelID;$messageID]
+$sendEmbedMessage[$channelID;;
+🗑️ | Eliminando ticket...;;
+El ticket fué valorado y será eliminado <t:$calculate[$getTimestamp+10]:R>;
+6e00ff;;;;;;;yes;]
+$async[si]
+$replyIn[10s]
+$endasync
+$await[si]
+
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$if[$json[num-tickets]>0]
+$jsonSetString[num-tickets;$sub[$json[num-tickets];1]]
+$else
+$jsonSetString[num-tickets;0]
+$endif
+$setUserVar[info-ticket;$jsonStringify;$botID;$guildID]
+
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$if[$json[token]!=desactivado]
+$httpAddHeader[Authorization;$json[token]]
+$httpPost[https://api.erxproject.xyz/discord/transcript/$guildID/$channelID]
+$if[$httpResult[error]!=]
+$var[url;https://youtu.be/Yc-7IQqcqeM?feature=shared]
+$else
+$var[url;$httpResult[url]]
+$endif
+$else
+$var[url;https://youtu.be/Yc-7IQqcqeM?feature=shared]
+$endif
+$if[$channelExists[$json[logs-trans]]==true]
+$var[trans;$sendEmbedMessage[$json[logs-trans];;
+🗒️ | Logs Tickets;;
+## 🗑️ | Ticket eliminado
+
+> - **🔎 | Panel:** $var[panel]
+
+> - **👑 | Dueño del ticket:** <@$var[dueño]>
+> - **🆔 | ID de usuario:** ``$var[dueño]``
+> - **⛔ | Razón del ticket:** ``$var[razon]``
+
+> - **🎫 | Atendido por:** $replaceText[<@$var[staff]>;<@>;No fué reclamado;-1]
+> - **🆔 | ID de usuario:** $replaceText[``$var[staff]``;````;;-1]
+
+> - **👔 | Eliminado por:** <@$botID>
+> - **🆔 | ID de usuario:** ``$botID``
+
+> - **✉️ | Canal:** ``$channelName[$channelID]``
+> - **🆔 | ID del canal:** ``$channelID``
+
+> - **⛔ | Razón de la eliminación:** ``Eliminado automáticamente porque ya fué valorado``;ff0000;;;$serverName[$guildID];$serverIcon;;;;yes]]
+$async[tr-log]
+$useChannel[$json[logs-trans]]
+$addButton[no;$var[url];Transcripción;link;;🎫;$var[trans]]
+$endasync
+$await[tr-log]
+$endif
+$deleteChannels[$channelID]
+$endif
