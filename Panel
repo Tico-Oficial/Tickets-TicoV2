@@ -1,0 +1,184 @@
+PREFIJO: !tickets (o el que quieras)
+
+$nomention
+$onlyAdmin[]
+$if[$message==]
+$addField[❌ | Error;
+Si deseas configurar los tickets sigue este formato:
+> - Formato: ``$commandTrigger config``
+
+Si deseas activar el sistema de tickets 1 sigue este formato:
+> - Formato: ``$commandTrigger 1 <Lo que quieres que se muestre en el menú (opcional)>``
+
+Si deseas activar el sistema de tickets 2 sigue este formato:
+> - Formato: ``$commandTrigger 1 <Lo que quieres que se muestre en el menú (opcional)>``
+
+-# Si tienes problemas abre hilo en https://discord.com/channels/1308480254733586582/1308482678961733693 o en https://discord.com/channels/1077968892535775262/1093912751497293925 y etiquetame (<@635160512832733185>)]
+$color[ff0000]
+$stop
+$endif
+
+$if[$checkContains[$toLowercase[$message[1]];config;comfig]==true]
+$title[🎫 | Tickets Tico v2]
+$description[
+👋 | ¡Bienvenido al mejor sistema de tickets!, [@$nickname\](https://discord.com/users/$authorID)
+
+En este sistema de tickets podrás personalizar todo según tus necesidades.
+Espero este sistema sea de tu agrado, apoya dando creditos para traer más sistemas cómo este :).
+El sistema fué testeado a lo que más da, por cuál se puede asegurar que funciona al 100%. Asegurate de copiar todos los códigos y variables cómo se especifica
+
+**IMPORTANTE:**
+> - Si encuentras un error reportarlo abriendo un hilo en https://discord.com/channels/1308480254733586582/1308482678961733693 o en https://discord.com/channels/1077968892535775262/1093912751497293925 y etiquetandome (<@635160512832733185>).
+> - __**NO**__ doy soporte si __**modificas el código y/o variables**__ (__**NO**__ me romperé la cabeza buscando donde la cagaste .-.), si lo modificas es por que le sabes :)
+
+-# **__CREDITOS__**
+> - -# **Creador:** <@635160512832733185>
+> - -# **API (Transcribir canales):** <@990604235362140180>
+> - -# **Testers:** <@635160512832733185>]
+$footer[Tickets Tico v2]
+$footerIcon[$serverIcon]
+$color[6e00ff]
+$newSelectMenu[panel-ticket;0;1;⚙️ | Configuración;]
+$addSelectMenuOption[panel-ticket;Embed del Ticket 1;embed-panel;Configura el embed del ticket 1;;✏️;]
+$addSelectMenuOption[panel-ticket;Embed del Ticket 2;embed-panel-2;Configura el embed del ticket 2;;✏️;]
+$addSelectMenuOption[panel-ticket;Activar/desactivar Transcripciones;token;Activa o desactiva las transcines de canales;;📜;]
+$addSelectMenuOption[panel-ticket;Categoria global de tickets;categoria;Configura la categoria global donde se crearan los tickets;;📂;]
+$addSelectMenuOption[panel-ticket;Roles de staff;rol-staff;Configura los roles de staff;;🛠️;]
+$addSelectMenuOption[panel-ticket;Limite de tickets;limite;Limite de tickets abiertos a la vez;;🎫;]
+$addSelectMenuOption[panel-ticket;Nombre de los tickets;nt;Con que nombre se crearán los tickets;;🪪;]
+$addSelectMenuOption[panel-ticket;Usar botones/menú;bt-mn;Elige si usar botones o un menú;;⌨️;]
+$addSelectMenuOption[panel-ticket;¿Quienes cierran los tickets?;ce-tick;Configurar quienes pueden cerrar los tickets;;🔒;]
+$addSelectMenuOption[panel-ticket;Agregar panel;+1;Agrega un panel a tus tickets;;✅;]
+$addSelectMenuOption[panel-ticket;Eliminar panel;-1;Elimina un panel a tus tickets;;⛔;]
+$addSelectMenuOption[panel-ticket;Canal de logs;logs;Coloca un canal de registro;;📋;]
+$addSelectMenuOption[panel-ticket;Ver configuración;cf;Previsualiza la configuración actual;;👀;]
+
+$jsonParse[$getUserVar[paneles-ticket;$botID;$guildID]]
+$var[tico;1]
+$eval[$repeatMessage[5;
+%{DOL}%if[%{DOL}%json[%{DOL}%var[tico\]\]==si\]
+%{DOL}%addSelectMenuOption[panel-ticket\;%{DOL}%json[name-%{DOL}%var[tico\]\]\;%{DOL}%var[tico\]\;Edita este panel\;\;%{DOL}%json[emoji-%{DOL}%var[tico\]\]\;\]
+%{DOL}%endif
+%{DOL}%var[tico\;%{DOL}%sum[%{DOL}%var[tico\]\;1\]\]
+]]
+
+$elseif[$message[1]==1]
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$textSplit[$json[rol];|]
+$if[$roleExists[$splitText[1]]==true]
+$if[$channelExists[$json[categoria-id]]==true]
+
+$jsonParse[$getUserVar[paneles-ticket;$botID;$guildID]]
+$if[$and[$json[t1]!=1;$json[t2]!=1;$json[t3]!=1;$json[t4]!=1;$json[t5]!=1]==true]
+$addField[❌ | Error;
+No hay ningún panel agregado, nadie podrá abrir ticket .-.]
+$color[ff0000]
+$stop
+$else
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$title[$json[titulo1]]
+$description[$json[descripcion1]]
+$image[$json[imagen1]]
+$footer[$json[footer1]]
+$footerIcon[$serverIcon]
+$color[$json[color1]]
+$endif
+
+$if[$json[ty-1]==2]
+$newSelectMenu[tickets;0;1;$replaceText[$message;$message[1];;1];]
+$jsonParse[$getUserVar[paneles-ticket;$botID;$guildID]]
+$var[tico;1]
+$eval[$repeatMessage[5;
+%{DOL}%if[%{DOL}%json[t%{DOL}%var[tico\]\]==1\]
+%{DOL}%if[%{DOL}%json[%{DOL}%var[tico\]\]==si\]
+%{DOL}%addSelectMenuOption[tickets\;%{DOL}%json[name-%{DOL}%var[tico\]\]\;%{DOL}%var[tico\]\;\;\;%{DOL}%json[emoji-%{DOL}%var[tico\]\]\;\]
+%{DOL}%endif
+%{DOL}%endif
+%{DOL}%var[tico\;%{DOL}%sum[%{DOL}%var[tico\]\;1\]\]
+]]
+$else
+$jsonParse[$getUserVar[paneles-ticket;$botID;$guildID]]
+$var[tico;1]
+$eval[$repeatMessage[5;
+%{DOL}%if[%{DOL}%json[t%{DOL}%var[tico\]\]==1\]
+%{DOL}%if[%{DOL}%json[%{DOL}%var[tico\]\]==si\]
+%{DOL}%addButton[no\;%{DOL}%var[tico\]\;%{DOL}%json[name-%{DOL}%var[tico\]\]\;secondary\;no\;%{DOL}%json[emoji-%{DOL}%var[tico\]\]\;\]
+%{DOL}%endif
+%{DOL}%endif
+%{DOL}%var[tico\;%{DOL}%sum[%{DOL}%var[tico\]\;1\]\]
+]]
+$endif
+
+$deletecommand
+
+$else
+$addField[❌ | Error;
+Debes de configurar la categoria donde se crearán los tickets :)]
+$color[ff0000]
+$endif
+$else
+$addField[❌ | Error;
+Debes de configurar el rol de staff :)]
+$color[ff0000]
+$endif
+
+$elseif[$message[1]==2]
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$textSplit[$json[rol];|]
+$if[$roleExists[$splitText[1]]==true]
+$if[$channelExists[$json[categoria-id]]==true]
+
+$jsonParse[$getUserVar[paneles-ticket;$botID;$guildID]]
+$if[$and[$json[t1]!=2;$json[t2]!=2;$json[t3]!=2;$json[t4]!=2;$json[t5]!=2]==true]
+$addField[❌ | Error;
+No hay ningún panel agregado, nadie podrá abrir ticket .-.]
+$color[ff0000]
+$stop
+$else
+$jsonParse[$getUserVar[ticket;$botID;$guildID]]
+$title[$json[titulo2]]
+$description[$json[descripcion2]]
+$image[$json[imagen2]]
+$footer[$json[footer2]]
+$footerIcon[$serverIcon]
+$color[$json[color2]]
+$endif
+
+$if[$json[ty-2]==2]
+$newSelectMenu[tickets;0;1;$replaceText[$message;$message[1];;1];]
+$jsonParse[$getUserVar[paneles-ticket;$botID;$guildID]]
+$var[tico;1]
+$eval[$repeatMessage[5;
+%{DOL}%if[%{DOL}%json[t%{DOL}%var[tico\]\]==2\]
+%{DOL}%if[%{DOL}%json[%{DOL}%var[tico\]\]==si\]
+%{DOL}%addSelectMenuOption[tickets\;%{DOL}%json[name-%{DOL}%var[tico\]\]\;%{DOL}%var[tico\]\;\;\;%{DOL}%json[emoji-%{DOL}%var[tico\]\]\;\]
+%{DOL}%endif
+%{DOL}%endif
+%{DOL}%var[tico\;%{DOL}%sum[%{DOL}%var[tico\]\;1\]\]
+]]
+$else
+$jsonParse[$getUserVar[paneles-ticket;$botID;$guildID]]
+$var[tico;1]
+$eval[$repeatMessage[5;
+%{DOL}%if[%{DOL}%json[t%{DOL}%var[tico\]\]==2\]
+%{DOL}%if[%{DOL}%json[%{DOL}%var[tico\]\]==si\]
+%{DOL}%addButton[no\;%{DOL}%var[tico\]\;%{DOL}%json[name-%{DOL}%var[tico\]\]\;secondary\;no\;%{DOL}%json[emoji-%{DOL}%var[tico\]\]\;\]
+%{DOL}%endif
+%{DOL}%endif
+%{DOL}%var[tico\;%{DOL}%sum[%{DOL}%var[tico\]\;1\]\]
+]]
+$endif
+
+$deletecommand
+
+$else
+$addField[❌ | Error;
+Debes de configurar la categoria donde se crearán los tickets :)]
+$color[ff0000]
+$endif
+$else
+$addField[❌ | Error;
+Debes de configurar el rol de staff :)]
+$color[ff0000]
+$endif
+$endif
