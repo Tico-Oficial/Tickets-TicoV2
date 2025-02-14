@@ -77,12 +77,12 @@ Este sistema cuenta con 3 Palabras claves, las cual son: **{tagg-user}, {tagg-ro
 > - **Resultado:** Ticket-6
 
 > - Ticket de **{name-panel}**
-> - **Resultado:** Ticket-de-Soporte]
+> - **Resultado:** Ticket-de-Soporte
 
 **🔒 | ¿Quienes podrán cerrar los tickets?:**
 > Con esta función podrás configurar quienes tendrán permitido cerrar y eliminar los tickets, puedes configurar si solo el staff o todos. Si configuras que todos, el staff y el dueño del ticket podrán cerralo y eliminarlo
 
-** ⌨️ | Usar botones o menú:**
+**⌨️ | Usar botones o menú:**
 > Con esta nueva función podrás configurar si usar botones o menú para tu sistema de tickets.
 
 > Puedes configurar esto individualmente para cada uno de los 2 sistemas de tickets
