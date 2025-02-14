@@ -1,0 +1,13 @@
+Esta versión sigue contando con 3 variables
+
+1-
+Nombre: ticket
+Valor= {"rr-1":"","rr-2":"","rr-3":"","rr-4":"","rr-5":"","c1": "","c2":"","c3":"","c4":"","c5":"","ce": "1","ty-1": "2","ty-2":"2","titulo1": "Sin configurar" ,"descripcion1": "Sin configurar" ,"imagen1": "" ,"footer1": "Sin configurar" ,"color1": "000000" ,"titulo2": "Sin configurar" ,"descripcion2": "Sin configurar" ,"imagen2": "" ,"footer2": "Sin configurar" ,"color2": "000000", "categoria-id": "0" ,"logs": "" ,"logs-trans": "" ,"rol": "" ,"lg-u": "0" ,"lp-u": "0" ,"name-ticket": "{emoji-panel}-{name-user}" ,"num-tickets": "0" ,"token": "desactivado", "lg": "0"}
+
+2-
+Nombre: paneles-ticket
+Valor= {"id": "" ,"t1": "","1": "no" ,"name-1": "No configurado-1" ,"emoji-1": "" , "titulo-1": "Sin configurar" ,"descripcion-1": "Sin configurar" ,"imagen-1": "" ,"footer-1": "Sin configurar" ,"color-1": "000000" ,"t2": "","2": "no" ,"name-2": "No configurado-2" ,"emoji-2": "" ,"titulo-2": "Sin configurar" ,"descripcion-2": "Sin configurar" ,"imagen-2": "" ,"footer-2": "Sin configurar" ,"color-2": "000000" ,"t3": "","3": "no" ,"name-3": "No configurado-3" ,"emoji-3": "" ,"titulo-3": "Sin configurar" ,"descripcion-3": "Sin configurar" ,"imagen-3": "" ,"footer-3": "Sin configurar" ,"color-3": "000000" ,"t4": "","4": "no" ,"name-4": "No configurado-4" ,"emoji-4": "" ,"titulo-4": "Sin configurar" ,"descripcion-4": "Sin configurar" ,"imagen-4": "" ,"footer-4": "Sin configurar" ,"color-4": "000000" ,"t5": "","5": "no" ,"name-5": "No configurado-5" ,"emoji-5": "" ,"titulo-5": "Sin configurar" ,"descripcion-5": "Sin configurar" ,"imagen-5": "" ,"footer-5": "Sin configurar" ,"color-5": "000000"}
+
+3- 
+Nombre: info-ticket
+Valor= {"dueño": "" ,"panel": "" ,"panel-id": "" ,"mess-id": "" ,"ab": "no" ,"tickets-global": "0" ,"tickets-panel-1": "0" ,"tickets-panel-2": "0" ,"tickets-panel-3": "0" ,"tickets-panel-4": "0" ,"tickets-panel-5": "0" ,"bloqueado": "no" ,"razon": "" ,"staff": "" ,"fecha": ""}
