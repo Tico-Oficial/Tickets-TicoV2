@@ -1,8 +1,16 @@
 # Tickets-TicoV2
+**⚙️ | Sistemas de tickets:**
+> Esta nueva versión trae la posibilidad de tener hasta 2 sistemas de tickets.
+
+> Esta nueva funcionalidad se activa simplemente usando tu **prefijo seguido del número del sistema (1 o 2)**
+> Ejemplo: !tickets 1 (mensaje a mostrar en el menú (opcional))
+> Esto activará el sistema de tickets 1
+> Ejemplo 2: !tickets 2 (mensaje a mostrar en el menú (opcional))
 
 **📖 | Información**
 > Acá tienes la información sobre este sistema
-**🗣️ | Palabras clave:**
+
+> **🗣️ | Palabras clave:**
 Este sistema cuenta con 3 Palabras claves, las cual son: **{tagg-user}, {tagg-rol} y {razon}**. ¿Para que sirven y donde se pueden usar?
 
 > Estas palabras claves sirven para poder etiquetar al usuario que abre el ticket **{tagg-user}**, para poder etiquetar al rol de staff **{tagg-rol}** y para colocar la razón por la cual fué abierto el ticket **{razon}** en cualquier parte de tu mensaje de bienvenida, estan creadas para darle una mejor estetica a tus tickets 😎.
@@ -71,8 +79,13 @@ Este sistema cuenta con 3 Palabras claves, las cual son: **{tagg-user}, {tagg-ro
 > - Ticket de **{name-panel}**
 > - **Resultado:** Ticket-de-Soporte]
 
-**🔒 | ¿Quiens podrán cerrar los tickets?:**
+**🔒 | ¿Quienes podrán cerrar los tickets?:**
 > Con esta función podrás configurar quienes tendrán permitido cerrar y eliminar los tickets, puedes configurar si solo el staff o todos. Si configuras que todos, el staff y el dueño del ticket podrán cerralo y eliminarlo
+
+** ⌨️ | Usar botones o menú:**
+> Con esta nueva función podrás configurar si usar botones o menú para tu sistema de tickets.
+
+> Puedes configurar esto individualmente para cada uno de los 2 sistemas de tickets
 
 **✅ | Agregar panel**
 > Está función es para agregar un nuevo panel a tus tickets tipo "Soporte, Alianza, Compras, etc..." con un máximo de 5 paneles, cada panel también es personalizable 😎. Al crear un nuevo panel se te pedirá indicar a que sistema de tickets quieres agregarlo, si al **ticket-1** o **ticket-2**.
