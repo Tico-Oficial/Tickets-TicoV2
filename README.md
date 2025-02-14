@@ -9,7 +9,7 @@ Este sistema cuenta con 3 Palabras claves, las cual son: **{tagg-user}, {tagg-ro
 
 > Estas palabras claves solo funcionan en los mensajes de bienvenida de los tickets y en la parte de "Titulo y Descripción"
 
-**__Ejemplos de uso:__**
+> **__Ejemplos de uso:__**
 
 > - Bienvenido al ticket **{tagg-user}**
 > - **Resultado:** Bienvenido al ticket @Tico#
@@ -23,9 +23,21 @@ Este sistema cuenta con 3 Palabras claves, las cual son: **{tagg-user}, {tagg-ro
 **❌ | Bloquear-desbloquear usuarios:**
 > Con esta función podrás bloquear a usuarios para que no puedan abrir tickets. Para esos usuarios que mal usan los tickets
 
+**📂 | Categoria Global de los tickets:**
+> Configura la categoría donde se abrirán los tickets creados
+
+**📂 | Categoria personalizable para cada panel:**
+> Configura una categoria única donde se abrirán los tickets para cada panel.
+
+> Se puede configurar una categoría para cada panel, si en dado caso no se ha configurado alguna, el sistema creará el ticket en la categoría global de los tickets
+
 **🛠️ | Rol staff:**
 > Con esta función indicarás cual es el rol de staff, el cual podrá ver los tickets, atender, cerrar y/o bloquear usuarios del sistema de tickets. Puedes configurar hasta 10 roles de staff
 
+**🔧 | Restricción por rol:**
+> En esta función podrás configurar los roles que podrán abrir ticket en un en específico, es decir; si configuras el rol @boosters, esto quiere decir que solo los que tiene este rol podrán abrir ticket en el panel que se configuró el rol.
+
+> Se puede configurar 3 roles como máximo para cada panel
 **🎫 | Limite de tickets:**
 > Esto tiene con función limitar la cantidad de tickets abiertos que un usuario puede tener a la misma vez.
 
@@ -64,13 +76,11 @@ Este sistema cuenta con 3 Palabras claves, las cual son: **{tagg-user}, {tagg-ro
 > Para editar cada panel solo usa el comando para configurar los tickets y en el menú te saldrá los paneles que tienes creados, solo seleccionas el que deseas editar y sigues las instruciones
 
 **⛔ | Eliminar panel:**
-> Con está función función podrás borrar el panel que deseas, solo debes de seleccionar está opción e indicar el nombre del panel]
-$addField[📋 | Canal de logs (registros);
-Al activar está función automáticamente se enviará el registro de los tickets en canal especificado. Se enviará cuando un ticket es abierto, cerrado, reclamado, se retirar la reclamación, se valora la atención recibida y/o se reabre un ticket. 
+> Con está función función podrás borrar el panel que deseas, solo debes de seleccionar está opción e indicar el nombre del panel
 
-De igual manera podrás configurar un canal de transcripciones, el cuál será el canal donde se enviarán los tickets cuando Sean eliminados junto con la transcripción del mismo.
+**📋 | Canal de logs (registros):**
+> Al activar está función automáticamente se enviará el registro de los tickets en canal especificado. Se enviará cuando un ticket es abierto, cerrado, reclamado, se retirar la reclamación, se valora la atención recibida y/o se reabre un ticket.
 
-También se enviará un MD al dueño del ticket cuando su ticket fué cerrado (solo sí tiene los MD habilitados)]
-$footer[Tickets Tico v2]
-$footerIcon[$serverIcon]
-$color[6e00ff]
+> De igual manera podrás configurar un canal de transcripciones, el cuál será el canal donde se enviarán los tickets cuando Sean eliminados junto con la transcripción del mismo.
+
+> También se enviará un MD al dueño del ticket cuando su ticket fué cerrado (solo sí tiene los MD habilitados)
