@@ -1,7 +1,6 @@
 PREFIJO: $onInteraction
 
 $nomention
-$suppressErrors[Hay un error :(]
 $onlyIf[$or[$customID==1;$customID==2;$customID==3;$customID==4;$customID==5;$customID==tickets;$customID==recl;$customID==cerr;$customID==eliminar;$customID==val;$customID==rea;$customID==config-panel;$customID==panel-ticket;$customID==cf-pan;$customID==cf-paneles]==true;]
 $removeAllComponents
 $ephemeral
@@ -809,13 +808,9 @@ $setUserVar[ticket;$jsonStringify;$botID;$guildID]
 
 $jsonParse[$getUserVar[ticket;$botID;$guildID]]
 $if[$json[token]!=desactivado]
-$httpAddHeader[Authorization;$json[token]]
-$httpPost[https://api.erxproject.xyz/discord/transcript/$guildID/$channelID]
-$if[$httpResult[error]!=]
-$var[url;https://youtu.be/Yc-7IQqcqeM?feature=shared]
-$else
-$var[url;$httpResult[url]]
-$endif
+$httpGet[https://edgabot.lucnodes.es/api/Transcript/enlace.php?url=$url[encode;https://edgabot.lucnodes.es/api/Transcript/index.php?TokenBot=$json[token]&channelID=$channelID]]
+
+$var[url;$httpResult[download_link]]
 $else
 $var[url;https://youtu.be/Yc-7IQqcqeM?feature=shared]
 $endif
