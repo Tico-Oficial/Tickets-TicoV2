@@ -808,7 +808,7 @@ $setUserVar[ticket;$jsonStringify;$botID;$guildID]
 
 $jsonParse[$getUserVar[ticket;$botID;$guildID]]
 $if[$json[token]!=desactivado]
-$httpGet[https://akiomae.xyz.es/api/Transcript/enlace.php?url=$url[encode;https://edgabot.lucnodes.es/api/Transcript/index.php?TokenBot=$json[token]&channelID=$channelID]]
+$httpGet[https://akiomae.xyz/api/Transcript/enlace.php?url=$url[encode;https://edgabot.lucnodes.es/api/Transcript/index.php?TokenBot=$json[token]&channelID=$channelID]]
 
 $var[url;$httpResult[download_link]]
 $else
