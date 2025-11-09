@@ -376,6 +376,7 @@ Sistema de transcripciones de canales activado, por favor asegurate de colocar c
 $color[00ff00]
 $else
 $jsonSetString[token;desactivado]
+$setUserVar[ticket;$jsonStringify;$botID;$guildID]
 $addField[✅ | Sistema activado;
 Sistema de transcripciones de canales desactivado]
 $color[00ff00]
